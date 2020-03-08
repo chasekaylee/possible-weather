@@ -39,6 +39,7 @@ module.exports = router => {
         return res.status(404).send({
           status: response.status,
           msg: `Could not get results for address: ${req.query.address}`,
+          error_message: response.error_message,
         });
       }
     } catch (err) {
@@ -80,6 +81,7 @@ module.exports = router => {
           return res.status(404).send({
             status: response.status,
             msg: `Could not get results for coordinates: ${req.query.latlng}`,
+            error_message: response.error_message,
           });
         }
       } catch (err) {
