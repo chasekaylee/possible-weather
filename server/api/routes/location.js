@@ -38,7 +38,7 @@ module.exports = router => {
       } else {
         return res.status(404).send({
           status: response.status,
-          msg: `No results for address: ${req.query.address}`,
+          msg: `Could not get results for address: ${req.query.address}`,
         });
       }
     } catch (err) {
@@ -73,10 +73,14 @@ module.exports = router => {
             req.query.latlng
           }&key=${process.env.GOOGLE_API_KEY}`,
         ).then(resp => resp.json());
-
-        if (response.status === 'OK' && response.results.length !== 0) {
+        if (response.status === 'OK' && response.status !== 'ZERO_RESULTS') {
           const location = response.results[0];
           address = location.formatted_address;
+        } else {
+          return res.status(404).send({
+            status: response.status,
+            msg: `Could not get results for coordinates: ${req.query.latlng}`,
+          });
         }
       } catch (err) {
         return res
