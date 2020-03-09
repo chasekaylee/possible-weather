@@ -6,15 +6,48 @@
  *
  */
 import produce from 'immer';
-import { DEFAULT_ACTION } from './constants';
+import {
+  SET_SEARCH_QUERY,
+  SET_UNITS,
+  SET_COORDINATES,
+  SET_ADDRESS,
+  POLL_START,
+  POLL_STOP,
+} from './constants';
 
-export const initialState = {};
+export const initialState = {
+  coordinates: {
+    latitude: null,
+    longitude: null,
+  },
+  query: null,
+  units: 'us',
+  address: '',
+  polling: false,
+};
 
 /* eslint-disable default-case, no-param-reassign */
 const homePageReducer = (state = initialState, action) =>
-  produce(state, (/* draft */) => {
+  produce(state, draft => {
     switch (action.type) {
-      case DEFAULT_ACTION:
+      case SET_SEARCH_QUERY:
+        draft.query = action.query;
+        break;
+      case SET_UNITS:
+        draft.units = action.units;
+        break;
+      case SET_COORDINATES:
+        draft.coordinates.latitude = action.latitude;
+        draft.coordinates.longitude = action.longitude;
+        break;
+      case SET_ADDRESS:
+        draft.address = action.address;
+        break;
+      case POLL_START:
+        draft.polling = true;
+        break;
+      case POLL_STOP:
+        draft.polling = false;
         break;
     }
   });

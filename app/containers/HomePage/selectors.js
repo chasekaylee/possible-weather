@@ -21,5 +21,42 @@ const makeSelectHomePage = () =>
     substate => substate,
   );
 
+const makeSelectLatLng = () =>
+  createSelector(
+    selectHomePageDomain,
+    ({ coordinates: { latitude, longitude } }) => `${latitude},${longitude}`,
+  );
+
+const makeSelectUnits = () =>
+  createSelector(
+    selectHomePageDomain,
+    ({ units }) => units,
+  );
+
+const makeSelectAddress = () =>
+  createSelector(
+    selectHomePageDomain,
+    ({ address }) => address,
+  );
+
+const makeSelectSearchQuery = () =>
+  createSelector(
+    selectHomePageDomain,
+    ({ query }) => query,
+  );
+
+const makeSelectPolling = () =>
+  createSelector(
+    selectHomePageDomain,
+    ({ polling }) => polling,
+  );
+
 export default makeSelectHomePage;
-export { selectHomePageDomain };
+export {
+  selectHomePageDomain,
+  makeSelectLatLng,
+  makeSelectUnits,
+  makeSelectAddress,
+  makeSelectSearchQuery,
+  makeSelectPolling,
+};

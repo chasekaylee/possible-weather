@@ -5,6 +5,10 @@
  * constants here. We prefix them with 'yourproject/YourComponent' so we avoid
  * reducers accidentally picking up actions they shouldn't.
  *
- * Follow this format:
- * export const YOUR_ACTION_CONSTANT = 'yourproject/YourContainer/YOUR_ACTION_CONSTANT';
  */
+
+export const FETCH_FORECAST_START = 'app/App/FETCH_FORECAST_START';
+export const FETCH_FORECAST_SUCCESS = 'app/App/FETCH_FORECAST_SUCCESS';
+export const FETCH_FORECAST_ERROR = 'app/App/FETCH_FORECAST_ERROR';
+
+export const START_LOADING = 'app/App/START_LOADING';
