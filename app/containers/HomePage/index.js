@@ -8,19 +8,49 @@
 /* istanbul ignore file */
 
 import React, { useEffect, useState } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
+// MATERIAL
+import { makeStyles } from '@material-ui/core/styles';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
+import IconButton from '@material-ui/core/IconButton';
+
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import request from 'utils/request';
-import makeSelectHomePage from './selectors';
+
+import CurrentForecast from 'containers/CurrentForecast';
+
+// COMPONENTS
+import LoadingIndicator from 'components/LoadingIndicator';
+import ForecastList from 'components/ForecastList';
+
+// REDUX
+import {
+  makeSelectForecast,
+  makeSelectLoading,
+} from 'containers/App/selectors';
+import { forecastStart } from 'containers/App/actions';
+
+import {
+  setSearchQuery,
+  setCoordinates as setLatLng,
+  handleSearch as searchAddress,
+  startPolling as startPoll,
+  stopPolling as stopPoll,
+} from './actions';
+import { makeSelectPolling } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 
-const getLocation = () =>
+const getCurrentLocation = () =>
   new Promise((resolve, reject) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -34,80 +64,70 @@ const getLocation = () =>
     }
   });
 
-export function HomePage() {
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    height: 200,
+    width: 200,
+  },
+  controlBar: {
+    display: 'flex',
+    flexDirection: 'row',
+    margin: '2em',
+    justifyContent: 'center',
+  },
+  control: {
+    padding: theme.spacing(2),
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+  weatherContent: {
+    textAlign: 'center',
+  },
+  weatherContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+}));
+
+export function HomePage({
+  onChangeQuery,
+  setCoordinates,
+  fetchForecast,
+  handleSearch,
+  forecast,
+  loading,
+  startPolling,
+  stopPolling,
+  polling,
+}) {
   useInjectReducer({ key: 'homePage', reducer });
   useInjectSaga({ key: 'homePage', saga });
 
-  const [lat, setLat] = useState(0);
-  const [lng, setLng] = useState(0);
-  const [forecast, setForecast] = useState('');
-  const [address, setAddress] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const classes = useStyles();
+
   const [error, setError] = useState(false);
-  const [searchError, setSearchError] = useState(false);
 
   useEffect(() => {
-    getLocation()
+    getCurrentLocation()
       .then(({ latitude, longitude }) => {
-        setLat(latitude);
-        setLng(longitude);
+        setCoordinates(latitude, longitude);
+        fetchForecast();
       })
       .catch(() => {
         setError(true);
       });
   }, []);
 
-  useEffect(() => {
-    if (lat !== 0 && lng !== 0) {
-      request(`api/weather/forecast?latlng=${lat},${lng}&units=auto`)
-        .then(data => {
-          setForecast(data);
-        })
-        .catch(() => {
-          setError(true);
-        });
+  const handleToggle = e => {
+    if (e.target.checked) {
+      startPolling();
+    } else {
+      stopPolling();
     }
-  }, [lat, lng]);
-
-  useEffect(() => {
-    if (lat !== 0 && lng !== 0) {
-      request(`api/location/reverse-geocode?latlng=${lat},${lng}`)
-        .then(({ address: currentLocation }) => {
-          setAddress(currentLocation);
-        })
-        .catch(() => {
-          setError(true);
-        });
-    }
-  }, [lat, lng]);
-
-  const handleChange = e => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleSearch = () => {
-    setSearchError(false);
-    request(`api/location/geocode?address=${searchTerm}`)
-      .then(
-        ({
-          coordinates: { lat: latitude, lng: longitude },
-          address: currentAddress,
-        }) => {
-          request(
-            `api/weather/forecast?latlng=${latitude},${longitude}&units=auto`,
-          )
-            .then(data => {
-              setAddress(currentAddress);
-              setForecast(data);
-            })
-            .catch(() => {
-              setError(true);
-            });
-        },
-      )
-      .catch(() => {
-        setSearchError(true);
-      });
   };
 
   if (error) {
@@ -118,30 +138,76 @@ export function HomePage() {
 
   return (
     <div>
-      <div>
-        <h1>{address}</h1>
-        <input onChange={handleChange} type="text" />
-        <button onClick={handleSearch} type="button">
-          Search
-        </button>
-        {searchError && <span>Could not get the forecast for {address}</span>}
-        <div>{JSON.stringify(forecast)}</div>
+      <div className={classes.controlBar}>
+        <TextField
+          onChange={onChangeQuery}
+          id="outlined-basic"
+          label="Enter a place..."
+          variant="outlined"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment>
+                <IconButton onClick={handleSearch}>
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <FormGroup component="fieldset">
+          <FormControlLabel
+            control={<Switch checked={polling} onChange={handleToggle} />}
+            label="Live Updates"
+            labelPlacement="top"
+          />
+        </FormGroup>
+      </div>
+
+      <div className={classes.weatherContainer}>
+        {loading ? (
+          <LoadingIndicator />
+        ) : (
+          <>
+            <CurrentForecast />
+
+            <ForecastList
+              forecast={forecast ? forecast.data : []}
+              summary={forecast ? forecast.data : ''}
+            />
+          </>
+        )}
       </div>
     </div>
   );
 }
 
 HomePage.propTypes = {
-  // dispatch: PropTypes.func.isRequired,
+  onChangeQuery: PropTypes.func,
+  setCoordinates: PropTypes.func,
+  fetchForecast: PropTypes.func,
+  handleSearch: PropTypes.func,
+  forecast: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  loading: PropTypes.bool,
+  startPolling: PropTypes.func,
+  stopPolling: PropTypes.func,
+  polling: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
-  homePage: makeSelectHomePage(),
+  forecast: makeSelectForecast(),
+  loading: makeSelectLoading(),
+  polling: makeSelectPolling(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
+    onChangeQuery: evt => dispatch(setSearchQuery(evt.target.value)),
+    setCoordinates: (latitude, longitude) =>
+      dispatch(setLatLng(latitude, longitude)),
+    fetchForecast: () => dispatch(forecastStart()),
+    handleSearch: () => dispatch(searchAddress()),
+    startPolling: () => dispatch(startPoll()),
+    stopPolling: () => dispatch(stopPoll()),
   };
 }
 
