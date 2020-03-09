@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<WeatherIcon /> Should render and match the snapshot 1`] = `
+<img
+  alt="rain"
+  height="100"
+  src="IMAGE_MOCK"
+  width="100"
+/>
+`;

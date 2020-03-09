@@ -1,13 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<App /> should render and match the snapshot 1`] = `
-<div>
+<div
+  className="makeStyles-root-1"
+>
+  <ForwardRef(WithStyles) />
   <Switch>
-    <Route
-      component={[Function]}
-      exact={true}
-      path="/"
-    />
+    <ErrorBoundary>
+      <Route
+        component={[Function]}
+        exact={true}
+        path="/"
+      />
+    </ErrorBoundary>
     <Route
       component={[Function]}
     />

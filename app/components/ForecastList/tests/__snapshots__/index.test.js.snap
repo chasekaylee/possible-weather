@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ForecastList /> Should render and match the snapshot 1`] = `
+<div
+  class="makeStyles-root-172"
+>
+  <h1 />
+  <div
+    class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-6"
+  >
+    <div
+      class="MuiGrid-root MuiGrid-item"
+    >
+      <div
+        class="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        <div
+          class="MuiCardContent-root makeStyles-cardContent-280"
+        >
+          <div
+            class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
+          >
+            <div
+              class="makeStyles-weatherContent-281"
+            >
+              <h2
+                class="MuiTypography-root MuiTypography-h5"
+              >
+                Mon
+              </h2>
+              <div>
+                <img
+                  alt="clear-day"
+                  height="50"
+                  src="IMAGE_MOCK"
+                  width="50"
+                />
+                <h2
+                  class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom"
+                >
+                  <strong>
+                    48
+                    °
+                  </strong>
+                  <div>
+                    31
+                    °
+                  </div>
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
