@@ -172,7 +172,7 @@ export function HomePage({
 
             <ForecastList
               forecast={forecast ? forecast.data : []}
-              summary={forecast ? forecast.data : ''}
+              summary={forecast ? forecast.summary : ''}
             />
           </>
         )}

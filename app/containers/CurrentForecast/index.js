@@ -84,6 +84,12 @@ export function CurrentForecast({
     return null;
   }
 
+  function handleToggle(e, val) {
+    if (val !== null) {
+      setUnits(val);
+    }
+  }
+
   return (
     <Card className={classes.root}>
       <div>
@@ -101,7 +107,7 @@ export function CurrentForecast({
             <ToggleButtonGroup
               value={units}
               exclusive
-              onChange={setUnits}
+              onChange={handleToggle}
               aria-label="text alignment"
             >
               <ToggleButton value="us" aria-label="left aligned">
@@ -183,7 +189,7 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    setUnits: (e, newUnit) => dispatch(changeUnits(newUnit)),
+    setUnits: val => dispatch(changeUnits(val)),
   };
 }
 
