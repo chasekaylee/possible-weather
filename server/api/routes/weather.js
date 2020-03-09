@@ -2,8 +2,7 @@ const { Router } = require('express');
 const { check, validationResult } = require('express-validator');
 const fetch = require('node-fetch');
 
-const API_BASE_URL =
-  /* process.env.DARK_SKY_BASE_URL|| */ 'https://api.darksky.net';
+const API_BASE_URL = 'https://api.darksky.net';
 
 const route = Router();
 
@@ -26,11 +25,13 @@ module.exports = router => {
       }
 
       try {
-        const { currently, daily } = await fetch(
-          `${API_BASE_URL}/forecast/${process.env.DARK_SKY_API_KEY}/${
-            req.query.latlng
-          }?units=${req.query.units}`,
-        ).then(resp => resp.json());
+        const reqURL = `${API_BASE_URL}/forecast/${
+          process.env.DARK_SKY_API_KEY
+        }/${req.query.latlng}?units=${req.query.units}`;
+
+        const { currently, daily } = await fetch(reqURL).then(resp =>
+          resp.json(),
+        );
 
         if (!currently || !daily) {
           throw new Error('Could not get the current forecast data');
