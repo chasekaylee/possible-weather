@@ -1,6 +1,6 @@
 /**
  *
- * Tests for HomePage
+ * Tests for CurrentForecast
  *
  * @see https://github.com/react-boilerplate/react-boilerplate/tree/master/docs/testing
  *
@@ -8,38 +8,22 @@
 
 import React from 'react';
 import { render } from 'react-testing-library';
-import { Provider } from 'react-redux';
-import { browserHistory } from 'react-router-dom';
 // import 'jest-dom/extend-expect'; // add some helpful assertions
 
-import configureStore from '../../../configureStore';
-import { HomePage } from '../index';
+import { CurrentForecast } from '../index';
 
-describe('<HomePage />', () => {
-  let store;
-
-  beforeAll(() => {
-    store = configureStore({}, browserHistory);
-  });
-
+describe('<CurrentForecast />', () => {
   it('Expect to not log errors in console', () => {
     const spy = jest.spyOn(global.console, 'error');
-    render(
-      <Provider store={store}>
-        <HomePage />
-      </Provider>,
-    );
+    const dispatch = jest.fn();
+    render(<CurrentForecast dispatch={dispatch} />);
     expect(spy).not.toHaveBeenCalled();
   });
 
   it('Should render and match the snapshot', () => {
     const {
       container: { firstChild },
-    } = render(
-      <Provider store={store}>
-        <HomePage />
-      </Provider>,
-    );
+    } = render(<CurrentForecast />);
     expect(firstChild).toMatchSnapshot();
   });
 });

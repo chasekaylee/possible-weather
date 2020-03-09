@@ -2,14 +2,11 @@
  * Test sagas
  */
 
-/* eslint-disable redux-saga/yield-effects */
-// import { take, call, put, select } from 'redux-saga/effects';
-// import homePageSaga from '../saga';
-
-// const generator = homePageSaga();
-
-describe('homePageSaga Saga', () => {
-  it.skip('Expect to have unit tests specified', () => {
-    expect(true).toEqual(false);
+// TODO: If have time
+describe('HomePage saga', () => {
+  describe('Saga', () => {
+    it('', () => {
+      expect(true).toEqual(true);
+    });
   });
 });

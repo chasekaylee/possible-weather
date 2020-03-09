@@ -1,13 +1,13 @@
-import { defaultAction } from '../actions';
-import { DEFAULT_ACTION } from '../constants';
+import { setSearchQuery } from '../actions';
+import { SET_SEARCH_QUERY } from '../constants';
 
 describe('HomePage actions', () => {
-  describe('Default Action', () => {
-    it('has a type of DEFAULT_ACTION', () => {
+  describe('setSearchQuery Action', () => {
+    it('has a type of SET_SEARCH_QUERY', () => {
       const expected = {
-        type: DEFAULT_ACTION,
+        type: SET_SEARCH_QUERY,
       };
-      expect(defaultAction()).toEqual(expected);
+      expect(setSearchQuery()).toEqual(expected);
     });
   });
 });
