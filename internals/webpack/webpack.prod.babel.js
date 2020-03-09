@@ -119,8 +119,8 @@ module.exports = require('./webpack.base.babel')({
       name: 'Possible Weather',
       short_name: 'Possible',
       description: 'My Possible Weather app!',
-      background_color: '#fafafa',
-      theme_color: '#b1624d',
+      background_color: '#2D2D2D',
+      theme_color: '#1A1A1A',
       inject: true,
       ios: true,
       icons: [
